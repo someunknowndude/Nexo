@@ -1,0 +1,125 @@
+HumanDied = false
+for i,v in next, game:GetService("Players").LocalPlayer.Character:GetDescendants() do
+if v:IsA("BasePart") and v.Name ~="HumanoidRootPart" and v.Name~="Torso" and v.Name~="Head" then 
+game:GetService("RunService").Heartbeat:connect(function()
+v.Velocity = Vector3.new(-18.55,0,-18.55)
+end)
+end
+end
+
+local plr = game.Players.LocalPlayer
+local char = plr.Character
+local srv = game:GetService('RunService')
+local ct = {}
+
+char.Archivable = true
+local reanim = char:Clone()
+reanim.Name = 'Nexo '..plr.Name..''
+reanim.Parent = workspace
+
+char.HumanoidRootPart:Destroy()
+char.Animate:Remove()
+char.Humanoid.Animator:Remove()
+
+function create(part, parent, p, r)
+Instance.new("Attachment",part)
+Instance.new("AlignPosition",part)
+Instance.new("AlignOrientation",part)
+Instance.new("Attachment",parent)
+part.Attachment.Name = part.Name
+parent.Attachment.Name = part.Name
+part.AlignPosition.Attachment0 = part[part.Name]
+part.AlignOrientation.Attachment0 = part[part.Name]
+part.AlignPosition.Attachment1 = parent[part.Name]
+part.AlignOrientation.Attachment1 = parent[part.Name]
+parent[part.Name].Position = p or Vector3.new()
+part[part.Name].Orientation = r or Vector3.new()
+part.AlignPosition.MaxForce = 999999999
+part.AlignPosition.MaxVelocity = math.huge
+part.AlignPosition.ReactionForceEnabled = false
+part.AlignPosition.Responsiveness = math.huge
+part.AlignOrientation.Responsiveness = math.huge
+part.AlignPosition.RigidityEnabled = false
+part.AlignOrientation.MaxTorque = 999999999
+end
+
+for i,v in next, char:GetDescendants() do
+if v:IsA('Accessory') then
+v.Handle.AccessoryWeld:Remove()
+create(v.Handle,reanim[v.Name].Handle)
+end
+end
+
+char.Torso['Left Shoulder']:Destroy()
+char.Torso['Right Shoulder']:Destroy()
+char.Torso['Left Hip']:Destroy()
+char.Torso['Right Hip']:Destroy()
+
+create(char['Torso'],reanim['Torso'])
+create(char['Left Arm'],reanim['Left Arm'])
+create(char['Right Arm'],reanim['Right Arm'])
+create(char['Left Leg'],reanim['Left Leg'])
+create(char['Right Leg'],reanim['Right Leg'])
+
+for i,v in next, reanim:GetDescendants() do if v:IsA('BasePart') or v:IsA('Decal') then v.Transparency = 1 end end
+
+table.insert(ct,srv.RenderStepped:Connect(function()
+for i,v in next, reanim:GetDescendants() do
+if v:IsA('BasePart') then
+v.CanCollide = false
+end
+end
+end))
+
+table.insert(ct,srv.Stepped:Connect(function()
+for i,v in next, reanim:GetDescendants() do
+if v:IsA('BasePart') then
+v.CanCollide = false
+end
+end
+end))
+
+table.insert(ct,srv.RenderStepped:Connect(function()
+for i,v in next, char:GetDescendants() do
+if v:IsA('BasePart') then
+v.CanCollide = false
+end
+end
+end))
+
+table.insert(ct,srv.Stepped:Connect(function()
+for i,v in next, char:GetDescendants() do
+if v:IsA('BasePart') then
+v.CanCollide = false
+end
+end
+end))
+
+_G.netted = true
+
+game:GetService("RunService").RenderStepped:Connect(function()
+    setsimulationradius(math.huge)
+end)
+
+if _G.netted ~= true then
+	_G.netted = true
+	coroutine.wrap(function()
+		settings().Physics.PhysicsEnvironmentalThrottle = Enum.EnviromentalPhysicsThrottle.Disabled
+		settings().Physics.AllowSleep = false
+		game:GetService("RunService").RenderStepped:Connect(function()
+			game:FindFirstChildOfClass("Players").LocalPlayer.MaximumSimulationRadius=math.pow(math.huge,math.huge)
+			sethiddenproperty(game:FindFirstChildOfClass("Players").LocalPlayer,"SimulationRadius",math.huge*math.huge)
+		end)
+	end)()
+end
+
+table.insert(ct,reanim.Humanoid.Died:Connect(function()
+plr.Character = char
+char:BreakJoints()
+reanim:Destroy()
+HumanDied = true
+for _,v in pairs(ct) do v:Disconnect() end
+end))
+
+plr.Character = reanim
+workspace.CurrentCamera.CameraSubject = reanim.Humanoid
