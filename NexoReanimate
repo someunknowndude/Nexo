@@ -1,8 +1,8 @@
 HumanDied = false
 for i,v in next, game:GetService("Players").LocalPlayer.Character:GetDescendants() do
-if v:IsA("BasePart") and v.Name ~="HumanoidRootPart" and v.Name~="Torso" and v.Name~="Head" then 
+if v:IsA("BasePart") then 
 game:GetService("RunService").Heartbeat:connect(function()
-v.Velocity = Vector3.new(-18.55,0,-18.55)
+v.Velocity = Vector3.new(0,-25.05,0)
 end)
 end
 end
@@ -95,22 +95,19 @@ end
 end
 end))
 
-_G.netted = true
+_G.NEXOPRO = true
 
-game:GetService("RunService").RenderStepped:Connect(function()
-    setsimulationradius(math.huge)
-end)
-
-if _G.netted ~= true then
-	_G.netted = true
-	coroutine.wrap(function()
-		settings().Physics.PhysicsEnvironmentalThrottle = Enum.EnviromentalPhysicsThrottle.Disabled
-		settings().Physics.AllowSleep = false
-		game:GetService("RunService").RenderStepped:Connect(function()
-			game:FindFirstChildOfClass("Players").LocalPlayer.MaximumSimulationRadius=math.pow(math.huge,math.huge)
-			sethiddenproperty(game:FindFirstChildOfClass("Players").LocalPlayer,"SimulationRadius",math.huge*math.huge)
-		end)
-	end)()
+if _G.NEXOPRO ~= true then
+    _G.NEXOPRO = true
+    game:GetService("RunService").Stepped:Connect(function()
+       workspace.FallenPartsDestroyHeight = 0/0
+       settings().Physics.AllowSleep = false
+       game:GetService("Players").LocalPlayer.ReplicationFocus = workspace
+       settings().Physics.ThrottleAdjustTime = 6 - math.huge
+        setsimulationradius(math.huge,math.huge)
+        sethiddenproperty(game.Players.LocalPlayer, "MaximumSimulationRadius", math.huge)
+        sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", math.huge)
+    end)
 end
 
 table.insert(ct,reanim.Humanoid.Died:Connect(function()
