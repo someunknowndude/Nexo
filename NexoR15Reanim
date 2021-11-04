@@ -1,6 +1,6 @@
 HumanDied = false
 for i,v in next, game:GetService("Players").LocalPlayer.Character:GetDescendants() do
-if v:IsA("BasePart") and v.Name == 'Head' and v.Name == 'UpperTorso' --[[and v.Name ~="HumanoidRootPart" and v.Name~="Torso" and v.Name~="Head"]] then 
+if v:IsA("BasePart") and v.Name == 'Head' and v.Name == 'HumanoidRootPart' --[[and v.Name ~="HumanoidRootPart" and v.Name~="Torso" and v.Name~="Head"]] then 
 game:GetService("RunService").Heartbeat:connect(function()
 v.Velocity = Vector3.new(-18.55,0,-18.55)
 end)
