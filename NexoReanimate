@@ -3,6 +3,8 @@ for i,v in next, game:GetService("Players").LocalPlayer.Character:GetDescendants
 if v:IsA("BasePart") then 
 game:GetService("RunService").Heartbeat:connect(function()
 v.Velocity = Vector3.new(0,-25.05,0)
+sethiddenproperty(game.Players.LocalPlayer,"MaximumSimulationRadius",math.huge)
+sethiddenproperty(game.Players.LocalPlayer,"SimulationRadius",1.0000000331814e+32)
 end)
 end
 end
@@ -94,21 +96,6 @@ v.CanCollide = false
 end
 end
 end))
-
-_G.NEXOPRO = true
-
-if _G.NEXOPRO ~= true then
-    _G.NEXOPRO = true
-    game:GetService("RunService").Stepped:Connect(function()
-       workspace.FallenPartsDestroyHeight = 0/0
-       settings().Physics.AllowSleep = false
-       game:GetService("Players").LocalPlayer.ReplicationFocus = workspace
-       settings().Physics.ThrottleAdjustTime = 6 - math.huge
-        setsimulationradius(math.huge,math.huge)
-        sethiddenproperty(game.Players.LocalPlayer, "MaximumSimulationRadius", math.huge)
-        sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", math.huge)
-    end)
-end
 
 table.insert(ct,reanim.Humanoid.Died:Connect(function()
 plr.Character = char
