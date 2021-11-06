@@ -100,6 +100,12 @@ end
 end
 
 local ct = {}
+
+table.insert(ct,srv.Stepped:Connect(function()
+sethiddenproperty(game.Players.LocalPlayer,"MaximumSimulationRadius",math.huge)
+sethiddenproperty(game.Players.LocalPlayer,"SimulationRadius",1.0000000331814e+32)
+end))
+
 table.insert(ct,Rig.Humanoid.Died:Connect(function()
 for i,v in pairs(ct) do v:Disconnect() end
 plr.Character = Character
