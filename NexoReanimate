@@ -19,9 +19,10 @@ local reanim = char:Clone()
 reanim.Name = 'Nexo '..plr.Name..''
 reanim.Parent = workspace
 
-char.HumanoidRootPart:Destroy()
+for i,v in next, char.Humanoid:GetPlayingAnimationTracks() do
+v:Stop()
 char.Animate:Remove()
-char.Humanoid.Animator:Remove()
+end
 
 function create(part, parent, p, r)
 Instance.new("Attachment",part)
