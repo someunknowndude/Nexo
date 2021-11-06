@@ -3,6 +3,8 @@ for i,v in next, game:GetService("Players").LocalPlayer.Character:GetDescendants
 if v:IsA("BasePart") then 
 game:GetService("RunService").Heartbeat:connect(function()
 v.Velocity = Vector3.new(0,-25.05,0)
+sethiddenproperty(game.Players.LocalPlayer,"MaximumSimulationRadius",math.huge)
+sethiddenproperty(game.Players.LocalPlayer,"SimulationRadius",1.0000000331814e+32)
 end)
 end
 end
@@ -26,21 +28,6 @@ local Rig = game:GetObjects("rbxassetid://5088298388")[1]
 Rig.Parent = Character
 Rig.HumanoidRootPart.CFrame = Character.HumanoidRootPart.CFrame
 Rig.Name = "R6"
-
-_G.NEXOPRO = true
-
-if _G.NEXOPRO ~= true then
-    _G.NEXOPRO = true
-    game:GetService("RunService").Stepped:Connect(function()
-       workspace.FallenPartsDestroyHeight = 0/0
-       settings().Physics.AllowSleep = false
-       game:GetService("Players").LocalPlayer.ReplicationFocus = workspace
-       settings().Physics.ThrottleAdjustTime = 6 - math.huge
-        setsimulationradius(math.huge,math.huge)
-        sethiddenproperty(game.Players.LocalPlayer, "MaximumSimulationRadius", math.huge)
-        sethiddenproperty(game.Players.LocalPlayer, "SimulationRadius", math.huge)
-    end)
-end
 
 for i,v in next, Character.Humanoid:GetPlayingAnimationTracks() do
 v:Stop()
@@ -100,11 +87,6 @@ end
 end
 
 local ct = {}
-
-table.insert(ct,srv.Stepped:Connect(function()
-sethiddenproperty(game.Players.LocalPlayer,"MaximumSimulationRadius",math.huge)
-sethiddenproperty(game.Players.LocalPlayer,"SimulationRadius",1.0000000331814e+32)
-end))
 
 table.insert(ct,Rig.Humanoid.Died:Connect(function()
 for i,v in pairs(ct) do v:Disconnect() end
