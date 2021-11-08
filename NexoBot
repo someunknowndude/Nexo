@@ -154,7 +154,6 @@ workspace.CurrentCamera.CameraSubject = bot
 
 local m = plr:GetMouse()
 flingo=false
-flingclick=botcfling
 if flingclick then
 te(ct,m.Button1Down:Connect(function()
 flingo=true
