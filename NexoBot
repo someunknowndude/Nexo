@@ -133,8 +133,7 @@ plr.Character = bot
 workspace.CurrentCamera.CameraSubject = bot
 
 local m = plr:GetMouse()
-fling = false
-if fling then
+if flinge then
 flingo=false
 flingclick=true
 if flingclick then
