@@ -1,4 +1,3 @@
-pcall(function()
 -- init
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
@@ -2171,4 +2170,3 @@ do
 end
 
 return library
-end)
