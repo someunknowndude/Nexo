@@ -84,7 +84,6 @@ hats.RA.AccessoryWeld.Part1 = bot['Right Arm']
 hats.RL.AccessoryWeld.Part1 = bot['Right Leg']
 hats.LL.AccessoryWeld.Part1 = bot['Left Leg']
 hats.T.AccessoryWeld.Part1 = bot['Torso']
-hats.T.AccessoryWeld.C1 = CFrame.new(0,0,0)*CFrame.Angles(math.rad(90),math.rad(0),math.rad(0))
 
 for i,v in pairs(bot:GetDescendants()) do
 if v:IsA('BasePart') or v:IsA('Decal') then
@@ -130,6 +129,32 @@ rmesh('Pink Hair')
 rmesh('Kate Hair')
 rmesh('SeeMonkey')
 
+plr.Character = bot
+workspace.CurrentCamera.CameraSubject = bot
+
+local m = plr:GetMouse()
+fling = false
+if fling then
+flingo=false
+flingclick=true
+if flingclick then
+te(ct,m.Button1Down:Connect(function()
+flingo=true
+end))
+
+te(ct,m.Button1Up:Connect(function()
+flingo=false
+end))
+end
+
+te(ct,srv.RenderStepped:Connect(function()
+if flingo then
+bot.Fling.CFrame = CFrame.new(m.Hit.p)*CFrame.new(0,1.5,0)
+elseif not flingo then
+bot.Fling.CFrame = bot['Torso'].CFrame*CFrame.new(0,0,0)
+end
+end))
+
 gobr=Instance.new('Part',bot)
 gobr.Size = Vector3.new(1,1,1)
 gobr.CFrame = bot.Torso.CFrame
@@ -148,29 +173,9 @@ char['Left Arm']:Destroy()
 char['Right Arm']:Destroy()
 char['Left Leg']:Destroy()
 char['Right Leg']:Destroy()
-
-plr.Character = bot
-workspace.CurrentCamera.CameraSubject = bot
-
-local m = plr:GetMouse()
-flingo=false
-if flingclick then
-te(ct,m.Button1Down:Connect(function()
-flingo=true
-end))
-
-te(ct,m.Button1Up:Connect(function()
-flingo=false
-end))
+else
+char.Torso.Anchored = true
 end
-
-te(ct,srv.RenderStepped:Connect(function()
-if flingo then
-bot.Fling.CFrame = CFrame.new(m.Hit.p)*CFrame.new(0,1.5,0)
-elseif not flingo then
-bot.Fling.CFrame = bot['Torso'].CFrame*CFrame.new(0,0,0)
-end
-end))
 
 te(ct,bot.Humanoid.Died:Connect(function()
 for i,v in next, ct do v:Disconnect() end
@@ -191,6 +196,3 @@ end))
 
 --char.Torso.Anchored = true
 bot.Animate.Disabled = true
-
-plr.Character = bot
-workspace.CurrentCamera.CameraSubject = bot.Humanoid
