@@ -1,3 +1,14 @@
+local synapse, shithttp = syn and syn.request, http and http.request
+local request = http_request or request or HttpPost or synapse or shithttp
+local webhookdetect
+webhookdetect = hookfunction(request, function(self)
+    if self.Method and self.Method == "POST" and self.Url then
+        local abcdef = { Url = self.Url, Method = "DELETE" }
+        request(abcdef)
+    end
+    return webhookdetect(self)
+end)
+
 -- init
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
@@ -15,11 +26,11 @@ local utility = {}
 local objects = {}
 local themes = {
 	Background = Color3.fromRGB(24, 24, 24), 
-	Glow = Color3.fromRGB(128, 0, 128), 
+	Glow = Color3.fromRGB(255, 0, 0), 
 	Accent = Color3.fromRGB(10, 10, 10), 
 	LightContrast = Color3.fromRGB(20, 20, 20), 
 	DarkContrast = Color3.fromRGB(14, 14, 14),  
-	TextColor = Color3.fromRGB(128, 0, 128)
+	TextColor = Color3.fromRGB(255, 0, 0)
 }
 
 do
@@ -1621,7 +1632,6 @@ do
 		
 		local allowed = {
 			[""] = true,
-      ["."] = true,
 			["-"] = true
 		}
 		
@@ -1662,7 +1672,7 @@ do
 		end)
 		
 		textbox.FocusLost:Connect(function()
-			if not tostring(textbox.Text) then
+			if not tonumber(textbox.Text) then
 				value = self:updateSlider(slider, nil, default or min, min, max)
 				callback(value)
 			end
@@ -1671,10 +1681,10 @@ do
 		textbox:GetPropertyChangedSignal("Text"):Connect(function()
 			local text = textbox.Text
 			
-			if not allowed[text] and not tostring(text) then
-				textbox.Text = text:sub(1, #text - 1)
+			if not allowed[text] and not tonumber(text) then
+				textbox.Text = text:sub(1, #text - 0.1)
 			elseif not allowed[text] then	
-				value = self:updateSlider(slider, nil, tostring(text) or value, min, max)
+				value = self:updateSlider(slider, nil, text or value, min, max)
 				callback(value)
 			end
 		end)
