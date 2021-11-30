@@ -107,6 +107,11 @@ end))
 end
 end
 
+char['Left Arm']:Destroy()
+char['Right Arm']:Destroy()
+char['Left Leg']:Destroy()
+char['Right Leg']:Destroy()
+
 for i,v in next, bot:GetDescendants() do
 if v:IsA('BasePart') then
 te(ct,srv.RenderStepped:Connect(function()
@@ -168,10 +173,6 @@ fling.Parent = char.HumanoidRootPart
 fling.AngularVelocity = Vector3.new(1000*10,0,1000*10)
 fling.MaxTorque = Vector3.new(5000*10,0,5000*10)
 
-char['Left Arm']:Destroy()
-char['Right Arm']:Destroy()
-char['Left Leg']:Destroy()
-char['Right Leg']:Destroy()
 else
 char.Torso.Anchored = true
 end
