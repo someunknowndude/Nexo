@@ -1,41 +1,55 @@
-HumanDied = false
+HumanDied=false
+plr = game.Players.LocalPlayer
+char=plr.Character
+hum=char.Humanoid
+ct={}
+te=table.insert
+srv=game:GetService('RunService')
+m=plr:GetMouse()
+
 for i,v in next, game:GetService("Players").LocalPlayer.Character:GetDescendants() do
-if v:IsA("BasePart") then 
-game:GetService("RunService").Heartbeat:connect(function()
-v.Velocity = Vector3.new(0,-30,0)
+if v:IsA("BasePart") and v.Name ~= 'HumanoidRootPart' then 
+te(ct,game:GetService("RunService").Heartbeat:connect(function()
+pcall(function()
+v.Velocity = Vector3.new(-30,0,0)
+game.Players.LocalPlayer.ReplicationFocus=workspace
 sethiddenproperty(game.Players.LocalPlayer,"MaximumSimulationRadius",math.huge)
-sethiddenproperty(game.Players.LocalPlayer,"SimulationRadius",999999999)
+sethiddenproperty(game.Players.LocalPlayer,"SimulationRadius",999999)
 end)
+end))
 end
 end
 
-local plr = game.Players.LocalPlayer
-local char = game.Players.LocalPlayer.Character
-local ct = {}
-local srv = game:GetService('RunService')
-local te = table.insert
-local m = plr:GetMouse()
-char.Archivable = true
+char.Archivable=true
 
-local bot = char:Clone()
-bot.Name = 'NexoBot'
-bot.Parent = workspace
-
-function pos(part, parent, p)
-Instance.new("Attachment",part)
-Instance.new("AlignPosition",part)
-Instance.new("Attachment",parent)
-part.Attachment.Name = part.Name
-parent.Attachment.Name = part.Name
-part.AlignPosition.Attachment0 = part[part.Name]
-part.AlignPosition.Attachment1 = parent[part.Name]
-parent[part.Name].Position = p or Vector3.new()
-part.AlignPosition.MaxForce = 999999999*10
-part.AlignPosition.MaxVelocity = math.huge
-part.AlignPosition.ReactionForceEnabled = false
-part.AlignPosition.Responsiveness = math.huge
-part.AlignPosition.RigidityEnabled = false
+function nm(p)
+for i,v in next, p:GetDescendants() do
+if v:IsA('Mesh') or v:IsA('SpecialMesh') then
+v:Remove()
 end
+end
+end
+
+function nc(p)
+if p:IsA('BasePart') or p:IsA('Part') then
+te(ct,srv.RenderStepped:Connect(function()
+p.CanCollide=false
+end))
+te(ct,srv.Stepped:Connect(function()
+p.CanCollide=false
+end))
+else
+print('Cannot noclip '..p)
+end
+end
+
+fl=Instance.new('Folder',char);fl.Name='XenCreation'
+
+local reanim = char:Clone()
+reanim.Name='BotReanimate'
+reanim.Animate.Disabled=_G.CustomAnimations
+
+hum:ChangeState('Physics') -- Limbs Collider
 
 function create(part, parent, p, r)
 Instance.new("Attachment",part)
@@ -59,33 +73,23 @@ part.AlignPosition.RigidityEnabled = false
 part.AlignOrientation.MaxTorque = 999999999
 end
 
-for i,v in next, char:GetDescendants() do
-if v:IsA('Accessory') then
-v.Handle:BreakJoints()
-create(v.Handle,bot:FindFirstChild(v.Name).Handle)
-end
-end
-
-local hats = {
-LA = bot['Pink Hair'].Handle,
-RA = bot['Kate Hair'].Handle,
-LL = bot['Pal Hair'].Handle,
-RL = bot['LavanderHair'].Handle,
-T = bot['SeeMonkey'].Handle,
-}
-
-for i,v in next, hats do
-v.AccessoryWeld.C1 = CFrame.new(0,0,0)*CFrame.Angles(math.rad(90),math.rad(0),math.rad(0))
-v.AccessoryWeld.C0 = CFrame.new(0,0,0)*CFrame.Angles(math.rad(0),math.rad(0),math.rad(0))
+function Pos(part, parent, p)
+Instance.new("Attachment",part)
+Instance.new("AlignPosition",part)
+Instance.new("Attachment",parent)
+part.Attachment.Name = part.Name
+parent.Attachment.Name = part.Name
+part.AlignPosition.Attachment0 = part[part.Name]
+part.AlignPosition.Attachment1 = parent[part.Name]
+parent[part.Name].Position = p or Vector3.new()
+part.AlignPosition.MaxForce = 999999999*10
+part.AlignPosition.MaxVelocity = math.huge
+part.AlignPosition.ReactionForceEnabled = false
+part.AlignPosition.Responsiveness = math.huge
+part.AlignPosition.RigidityEnabled = false
 end
 
-hats.LA.AccessoryWeld.Part1 = bot['Left Arm']
-hats.RA.AccessoryWeld.Part1 = bot['Right Arm']
-hats.RL.AccessoryWeld.Part1 = bot['Right Leg']
-hats.LL.AccessoryWeld.Part1 = bot['Left Leg']
-hats.T.AccessoryWeld.Part1 = bot['Torso']
-
-for i,v in pairs(bot:GetDescendants()) do
+for i,v in next, reanim:GetDescendants() do
 if v:IsA('BasePart') or v:IsA('Decal') then
 v.Transparency = 1
 end
@@ -93,106 +97,146 @@ end
 
 for i,v in next, char:GetDescendants() do
 if v:IsA('BasePart') then
-te(ct,srv.Stepped:Connect(function()
-v.CanCollide = false
-end))
+nc(v)
 end
 end
 
-for i,v in next, bot:GetDescendants() do
+for i,v in next, char:GetDescendants() do
+if v:IsA('Accessory') then
+v.Handle:BreakJoints()
+create(v.Handle,reanim[v.Name].Handle)
+end
+end
+
+reanim.Parent=fl
+
+for i,v in next, reanim:GetDescendants() do
 if v:IsA('BasePart') then
-te(ct,srv.Stepped:Connect(function()
-v.CanCollide = false
-end))
+nc(v)
 end
 end
 
-char['Left Arm']:Destroy()
+for i,v in next, char.Humanoid:GetPlayingAnimationTracks() do
+v:Stop()
+end
+char.Animate:Remove()
+
+Parts={
+T=reanim['SeeMonkey'].Handle or reanim['HearMonkey'].Handle,
+RA=reanim['Pal Hair'].Handle,
+LA=reanim['Pink Hair'].Handle,
+RL=reanim['LavanderHair'].Handle,
+LL=reanim['Hat1'].Handle
+}
+
+for _,v in pairs(Parts) do
+v.AccessoryWeld.C0=CFrame.Angles(math.rad(90),math.rad(0),math.rad(0))
+v.AccessoryWeld.C1=CFrame.new()
+nm(char[v.Parent.Name].Handle)
+end
+
+Parts.T.AccessoryWeld.Part1=reanim.Torso
+Parts.RA.AccessoryWeld.Part1=reanim['Right Arm']
+Parts.LA.AccessoryWeld.Part1=reanim['Left Arm']
+Parts.RL.AccessoryWeld.Part1=reanim['Right Leg']
+Parts.LL.AccessoryWeld.Part1=reanim['Left Leg']
+
+function fix(p)
+fixer=Instance.new('BodyPosition',p)
+fixer.Name='BP'
+fixer.P=9e9
+fixer.D=9e9
+fixer.MaxForce=Vector3.new(99999,99999,99999)
+end
+
+function flinger(p)
+fling = Instance.new('BodyThrust')
+fling.Parent = p
+fling.Force = Vector3.new(999999999,999999999,999999999)
+fling.Location = p.Position
+end
+
+tc=Instance.new('Part')
+tc.CFrame=char.Torso.CFrame*CFrame.new(0,-6,0)
+tc.Anchored=true
+tc.Transparency=1
+tc.Name='Anchor'
+tc.CanCollide=false
+tc.Parent=char
+
+if _G.Fling then
+click=false
+create(char.HumanoidRootPart,tc)
 char['Right Arm']:Destroy()
-char['Left Leg']:Destroy()
 char['Right Leg']:Destroy()
-
-for i,v in next, bot:GetDescendants() do
-if v:IsA('BasePart') then
-te(ct,srv.RenderStepped:Connect(function()
-v.CanCollide = false
-end))
-end
-end
-
-function rmesh(HatName)
-for _,mesh in next, char[HatName]:GetDescendants() do
-if mesh:IsA("Mesh") or mesh:IsA("SpecialMesh") then
-mesh:Remove()
-end
-end
-end
-
-rmesh('LavanderHair')
-rmesh('Pal Hair')
-rmesh('Pink Hair')
-rmesh('Kate Hair')
-rmesh('SeeMonkey')
-
-plr.Character = bot
-workspace.CurrentCamera.CameraSubject = bot
-
-local m = plr:GetMouse()
-if flinge then
-flingo=false
-flingclick=true
-if flingclick then
+char['Left Leg']:Destroy()
+char['Left Arm']:BreakJoints()
+fix(char['Left Arm'])
+Pos(char['Left Arm'],reanim.Torso)
+if _G.ClickFling then
 te(ct,m.Button1Down:Connect(function()
-flingo=true
+click=true
 end))
-
 te(ct,m.Button1Up:Connect(function()
-flingo=false
+click=false
 end))
 end
-
-te(ct,srv.RenderStepped:Connect(function()
-if flingo then
-bot.Fling.CFrame = CFrame.new(m.Hit.p)*CFrame.new(0,1.5,0)
-elseif not flingo then
-bot.Fling.CFrame = bot['Torso'].CFrame*CFrame.new(0,0,0)
-end
-end))
-
-gobr=Instance.new('Part',bot)
-gobr.Size = Vector3.new(1,1,1)
-gobr.CFrame = bot.Torso.CFrame
-gobr.CanCollide = false
-gobr.Transparency = 1
-gobr.Anchored = true
-gobr.Name = 'Fling'
-
-pos(char.HumanoidRootPart,gobr)
-fling = Instance.new('BodyAngularVelocity')
-fling.Parent = char.HumanoidRootPart
-fling.AngularVelocity = Vector3.new(1000*10,0,1000*10)
-fling.MaxTorque = Vector3.new(5000*10,0,5000*10)
-
+te(ct,srv.Heartbeat:Connect(function()
+if click == true then
+char['Left Arm'].BP.Position=m.Hit.p
+char['Left Arm'].Position=m.Hit.p
 else
-char.Torso.Anchored = true
+char['Left Arm'].BP.Position=reanim.Torso.Position
+char['Left Arm'].Position=reanim.Torso.Position
+end
+end))
+flinger(char['Left Arm'])
+else
+create(char.HumanoidRootPart,tc)
+char['Left Arm']:BreakJoints()
+create(char['Left Arm'],reanim['Torso'],Vector3.new(),Vector3.new(0,0,90))
 end
 
-te(ct,bot.Humanoid.Died:Connect(function()
-for i,v in next, ct do v:Disconnect() end
-plr.Character = char
+chatted=false
+
+if _G.BotChat then
+te(ct,plr.Chatted:Connect(function(e)
+chatted=true
+wait(8)
+chatted=false
+end))
+end
+
+te(ct,srv.Heartbeat:Connect(function()
+if chatted then
+char.HumanoidRootPart.CFrame=reanim.Torso.CFrame
+elseif chatted == false then
+char.HumanoidRootPart.CFrame=tc.CFrame
+end
+end))
+
+if _G.FollowCamera then
+te(ct,srv.Stepped:Connect(function()
+reanim.Humanoid.CameraOffset = Vector3.new(0, reanim.Torso.Position.Y - reanim.Humanoid.RootPart.Position.Y, 0)
+end))
+end
+
+plr.Character=reanim
+workspace.CurrentCamera.CameraSubject=reanim.Humanoid
+
+old=nil
+
+te(ct,reanim.Humanoid.Died:Connect(function()
+old=reanim.HumanoidRootPart.CFrame
+reanim.HumanoidRootPart.CFrame=old
+wait()
+char['Left Arm'].BodyThrust.Force=Vector3.new()
+char['Left Arm'].BodyThrust:Destroy()
+reanim.HumanoidRootPart.CFrame=old
+plr.Character=char
 char:BreakJoints()
-coroutine.wrap(function()
-while true do
-srv.RenderStepped:wait()
-HumanDied = true
-if workspace:FindFirstChild(bot.Name) then
-bot:Destroy()
-else
-break
-end
-end
-end)()
+tc:Destroy()
+HumanDied=true
+game.Players:Chat('-gr')
+for i,v in next, ct do v:Disconnect() end
 end))
-
---char.Torso.Anchored = true
-bot.Animate.Disabled = true
