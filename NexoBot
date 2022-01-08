@@ -1,4 +1,5 @@
-HumanDied=false
+HumanDied = false
+
 plr = game.Players.LocalPlayer
 char=plr.Character
 hum=char.Humanoid
@@ -8,13 +9,13 @@ srv=game:GetService('RunService')
 m=plr:GetMouse()
 
 for i,v in next, game:GetService("Players").LocalPlayer.Character:GetDescendants() do
-if v:IsA("BasePart") and v.Name ~= 'HumanoidRootPart' then 
+if v:IsA("BasePart") then 
 te(ct,game:GetService("RunService").Heartbeat:connect(function()
 pcall(function()
-v.Velocity = Vector3.new(-30,0,0)
+v.Velocity = Vector3.new(0,-40,0)
 game.Players.LocalPlayer.ReplicationFocus=workspace
 sethiddenproperty(game.Players.LocalPlayer,"MaximumSimulationRadius",math.huge)
-sethiddenproperty(game.Players.LocalPlayer,"SimulationRadius",999999)
+sethiddenproperty(game.Players.LocalPlayer,"SimulationRadius",9e9)
 end)
 end))
 end
@@ -150,14 +151,13 @@ fixer.MaxForce=Vector3.new(99999,99999,99999)
 end
 
 function flinger(p)
-fling = Instance.new('BodyThrust')
-fling.Parent = p
-fling.Force = Vector3.new(999999999,999999999,999999999)
-fling.Location = p.Position
+f=Instance.new('BodyAngularVelocity',p)
+f.AngularVelocity = Vector3.new(9e9*10,9e9*10,9e9*10)
+f.MaxTorque=Vector3.new(9e9*10,0,0)
 end
 
 tc=Instance.new('Part')
-tc.CFrame=char.Torso.CFrame*CFrame.new(0,-6,0)
+tc.CFrame=char.Torso.CFrame*CFrame.new(0,0,-5)
 tc.Anchored=true
 tc.Transparency=1
 tc.Name='Anchor'
@@ -170,6 +170,7 @@ create(char.HumanoidRootPart,tc)
 char['Right Arm']:Destroy()
 char['Right Leg']:Destroy()
 char['Left Leg']:Destroy()
+char.Torso['Left Shoulder']:Destroy()
 char['Left Arm']:BreakJoints()
 fix(char['Left Arm'])
 Pos(char['Left Arm'],reanim.Torso)
@@ -227,11 +228,10 @@ workspace.CurrentCamera.CameraSubject=reanim.Humanoid
 old=nil
 
 te(ct,reanim.Humanoid.Died:Connect(function()
+reanim.HumanoidRootPart.Anchored=true
 old=reanim.HumanoidRootPart.CFrame
 reanim.HumanoidRootPart.CFrame=old
 wait()
-char['Left Arm'].BodyThrust.Force=Vector3.new()
-char['Left Arm'].BodyThrust:Destroy()
 reanim.HumanoidRootPart.CFrame=old
 plr.Character=char
 char:BreakJoints()
