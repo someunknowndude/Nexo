@@ -1,14 +1,3 @@
-local synapse, shithttp = syn and syn.request, http and http.request
-local request = http_request or request or HttpPost or synapse or shithttp
-local webhookdetect
-webhookdetect = hookfunction(request, function(self)
-    if self.Method and self.Method == "POST" and self.Url then
-        local abcdef = { Url = self.Url, Method = "DELETE" }
-        request(abcdef)
-    end
-    return webhookdetect(self)
-end)
-
 -- init
 local player = game.Players.LocalPlayer
 local mouse = player:GetMouse()
